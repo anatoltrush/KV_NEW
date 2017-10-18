@@ -1,15 +1,25 @@
 #include <Servo.h>
 #include "MOT_INIT.h"
 #include "FLASH.h"
+#include "VOLTAGE.h"
 #include "DIRECT.h"
+#include "GYROSCOPE.h"
 
 #include <SPI.h>
 #include "nRF24L01.h"
 #include "RF24.h"
 
 #define SIZE_OF_DATA 6
+#define GYRO_PERIOD 20
+//Read voltage
+#define VOLTAGE_PIN A2
+#define MIN_VOLTAGE 10//min voltage
+#define MAX_VOLTAGE 12//max voltage
+#define TIME_READ_VOLTAGE 3000
 
+Voltage volt(VOLTAGE_PIN, TIME_READ_VOLTAGE, MIN_VOLTAGE, MAX_VOLTAGE);
 Flasher led(13, 1000, 1000);
+Gyro gyro(GYRO_PERIOD);
 
 Servo motorFR;
 Servo motorFL;
@@ -44,6 +54,9 @@ void setup() {
   radio.startListening();  //начинаем слушать эфир, мы приёмный модуль
 }
 void loop() {
+	volt.update(); //DELETE
+	gyro.update();
+
 	motorFR.writeMicroseconds(power[0]);
 	motorFL.writeMicroseconds(power[1]);
 	motorRR.writeMicroseconds(power[2]);
@@ -55,9 +68,10 @@ void loop() {
 		Serial.println(data_upr[1]);
 		Serial.println("power[1]: ");		
 		Serial.println(power[1]);
-		delay(50);
+		delay(10);
 	//}
   change(power, data_upr);
 
   led.update();
 }
+// TODO: radio.setDataRate(RF24_250KBPS); CHANGE to RF24_1MBPS (pult and kvadro)
