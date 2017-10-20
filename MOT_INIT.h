@@ -2,11 +2,9 @@
 #define MOT_INIT_H
 
 #include <Servo.h>
+#include "DIRECT.h"
 
 #define DEBUG
-
-#define MIN_POWER 800
-#define MAX_POWER 2280
 
 #define FR_pin_out 4
 #define FL_pin_out 5
