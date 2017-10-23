@@ -10,7 +10,7 @@
 #define MAX_POWER 2300
 #define POWER_TO_START 880
 #define POWER_TO_UP 1000
-#define PERIOD 40
+#define PERIOD 100
 
 uint16_t standart[4] = { MIN_POWER, MIN_POWER, MIN_POWER, MIN_POWER };
 unsigned long currr = 0;
@@ -38,7 +38,23 @@ void gyro_stab(uint16_t(&power)[4]) {
 }
 //LEFT_X
 void axis_x_l(uint16_t(&power)[4], uint8_t(&data_upr)[6]) {
-
+	if (standart[0] > POWER_TO_UP && standart[1] > POWER_TO_UP && standart[2] > POWER_TO_UP && standart[3] > POWER_TO_UP)
+	{
+		if (data_upr[0] >= 127)
+		{
+			power[0] += map(data_upr[0], 127, 255, 0, 1000);/////////////////[0]///////////////////
+			power[0] += map(data_upr[0], 127, 255, 0, 1000);/////////////////[0]///////////////////
+			power[0] -= map(data_upr[0], 127, 255, 0, 1000);/////////////////[0]///////////////////
+			power[0] -= map(data_upr[0], 127, 255, 0, 1000);/////////////////[0]///////////////////
+		}
+		else if (data_upr[0] < 127)
+		{
+			power[0] += map(data_upr[0], 127, 0, 0, 1000);/////////////////[0]///////////////////
+			power[0] += map(data_upr[0], 127, 0, 0, 1000);/////////////////[0]///////////////////
+			power[0] -= map(data_upr[0], 127, 0, 0, 1000);/////////////////[0]///////////////////
+			power[0] -= map(data_upr[0], 127, 0, 0, 1000);/////////////////[0]///////////////////
+		}
+	}
 }
 //LEFT_Y
 void axis_y_l(uint16_t(&power)[4], uint8_t(&data_upr)[6]) {

@@ -122,8 +122,7 @@ public:
 	void show_all_kvadro_voltage(LiquidCrystal &lcd, float value) {
 		unsigned long curMillis = millis(); //current time		
 		if (curMillis - prevMillis >= period)
-		{
-			
+		{			
 				temp = output;
 				output = value;
 				lcd_abs(lcd, 5, 0, output);

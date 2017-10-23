@@ -19,7 +19,7 @@
 #define TIME_READ_VOLTAGE 3000
 
 Voltage volt(VOLTAGE_PIN, TIME_READ_VOLTAGE, MIN_VOLTAGE, MAX_VOLTAGE);
-Flasher led(13, 1000, 1000);
+Flasher led(8, 1000, 1000);
 Gyro gyro(GYRO_PERIOD);
 
 Servo motorFR;
@@ -83,3 +83,4 @@ void loop() {
   led.update();
 }
 // TODO: while (true) instead of loop
+// TODO: IN PULT CHANGE LED 13
