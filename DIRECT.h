@@ -10,7 +10,10 @@
 #define MAX_POWER 2300
 #define POWER_TO_START 880
 #define POWER_TO_UP 1000
-#define PERIOD 100
+#define POWER_TANG_KREN 500
+#define POWER_YAW 500
+#define POWER_FOR_PERIOD 5
+#define PERIOD 20
 
 uint16_t standart[4] = { MIN_POWER, MIN_POWER, MIN_POWER, MIN_POWER };
 unsigned long currr = 0;
@@ -42,17 +45,17 @@ void axis_x_l(uint16_t(&power)[4], uint8_t(&data_upr)[6]) {
 	{
 		if (data_upr[0] >= 127)
 		{
-			power[0] += map(data_upr[0], 127, 255, 0, 1000);/////////////////[0]///////////////////
-			power[0] += map(data_upr[0], 127, 255, 0, 1000);/////////////////[0]///////////////////
-			power[0] -= map(data_upr[0], 127, 255, 0, 1000);/////////////////[0]///////////////////
-			power[0] -= map(data_upr[0], 127, 255, 0, 1000);/////////////////[0]///////////////////
+			power[0] += map(data_upr[0], 127, 255, 0, POWER_YAW);
+			power[2] += map(data_upr[0], 127, 255, 0, POWER_YAW);
+			power[1] -= map(data_upr[0], 127, 255, 0, POWER_YAW);
+			power[3] -= map(data_upr[0], 127, 255, 0, POWER_YAW);
 		}
 		else if (data_upr[0] < 127)
 		{
-			power[0] += map(data_upr[0], 127, 0, 0, 1000);/////////////////[0]///////////////////
-			power[0] += map(data_upr[0], 127, 0, 0, 1000);/////////////////[0]///////////////////
-			power[0] -= map(data_upr[0], 127, 0, 0, 1000);/////////////////[0]///////////////////
-			power[0] -= map(data_upr[0], 127, 0, 0, 1000);/////////////////[0]///////////////////
+			power[1] += map(data_upr[0], 127, 0, 0, POWER_YAW);
+			power[3] += map(data_upr[0], 127, 0, 0, POWER_YAW);
+			power[0] -= map(data_upr[0], 127, 0, 0, POWER_YAW);
+			power[2] -= map(data_upr[0], 127, 0, 0, POWER_YAW);
 		}
 	}
 }
@@ -62,11 +65,11 @@ void axis_y_l(uint16_t(&power)[4], uint8_t(&data_upr)[6]) {
 	if (standart[0]<POWER_TO_UP && standart[1]<POWER_TO_UP && standart[2]<POWER_TO_UP && standart[3]<POWER_TO_UP) {
 #endif // DEBUG
 		if (data_upr[1] > 127) {
-			add = map(data_upr[1], 127, 255, 0, 100);
+			add = map(data_upr[1], 127, 255, 0, POWER_FOR_PERIOD);
 			height(add, 0);
 		}
 		else if (data_upr[1] < 127) {
-			add = map(data_upr[1], 127, 0, 0, 100);
+			add = map(data_upr[1], 127, 0, 0, POWER_FOR_PERIOD);
 			height(add, 1);
 		}
 #ifdef DEBUG
@@ -74,40 +77,40 @@ void axis_y_l(uint16_t(&power)[4], uint8_t(&data_upr)[6]) {
 #endif // DEBUG
 }
 //RIGHT_X
-void axis_x_r(uint16_t(&power)[4], uint8_t(&data_upr)[6]) {//CHANGE_power[0]!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+void axis_x_r(uint16_t(&power)[4], uint8_t(&data_upr)[6]) {
 	if (standart[0]>POWER_TO_UP && standart[1]>POWER_TO_UP && standart[2]>POWER_TO_UP && standart[3]>POWER_TO_UP)
 	{
 		if (data_upr[2] >= 127)
 		{
-			power[0] += map(data_upr[2], 127, 255, 0, 1000);/////////////////[0]///////////////////
-			power[0] += map(data_upr[2], 127, 255, 0, 1000);/////////////////[0]///////////////////
+			power[1] += map(data_upr[2], 127, 255, 0, POWER_TANG_KREN);
+			power[2] += map(data_upr[2], 127, 255, 0, POWER_TANG_KREN);
 		}
 		else if (data_upr[2] < 127)
 		{
-			power[0] += map(data_upr[2], 127, 0, 0, 1000);/////////////////[0]///////////////////
-			power[0] += map(data_upr[2], 127, 0, 0, 1000);/////////////////[0]///////////////////
+			power[0] += map(data_upr[2], 127, 0, 0, POWER_TANG_KREN);
+			power[3] += map(data_upr[2], 127, 0, 0, POWER_TANG_KREN);
 		}
 	}
 }
 //RIGHT_Y
-void axis_y_r(uint16_t(&power)[4], uint8_t(&data_upr)[6]) {//CHANGE_power[0]!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+void axis_y_r(uint16_t(&power)[4], uint8_t(&data_upr)[6]) {
 	if (standart[0]>POWER_TO_UP && standart[1]>POWER_TO_UP && standart[2]>POWER_TO_UP && standart[3]>POWER_TO_UP)
 	{
 		if (data_upr[3] >= 127)
 		{
-			power[0] += map(data_upr[3], 127, 255, 0, 1000);/////////////////[0]///////////////////
-			power[0] += map(data_upr[3], 127, 255, 0, 1000);/////////////////[0]///////////////////
+			power[2] += map(data_upr[3], 127, 255, 0, POWER_TANG_KREN);
+			power[3] += map(data_upr[3], 127, 255, 0, POWER_TANG_KREN);
 		}
 		else if (data_upr[3] < 127)
 		{
-			power[0] += map(data_upr[3], 127, 0, 0, 1000);/////////////////[0]///////////////////
-			power[0] += map(data_upr[3], 127, 0, 0, 1000);/////////////////[0]///////////////////
+			power[0] += map(data_upr[3], 127, 0, 0, POWER_TANG_KREN);
+			power[1] += map(data_upr[3], 127, 0, 0, POWER_TANG_KREN);
 		}
 	}
 }
 //
 void left_joystick(uint16_t(&power)[4], uint8_t(&data_upr)[6]) {
-	axis_x_l(power, data_upr);
+	//axis_x_l(power, data_upr);
 	axis_y_l(power, data_upr);
 }
 void right_joystick(uint16_t(&power)[4], uint8_t(&data_upr)[6]) {
@@ -134,7 +137,7 @@ void calculate(uint16_t(&power)[4], uint8_t(&data_upr)[6]) {
 	//CALCULATE
 	gyro_stab(power);
 	left_joystick(power, data_upr);
-	right_joystick(power, data_upr);
+	//right_joystick(power, data_upr);
 	check(power);
 }
 #endif // DIRECT_H
