@@ -56,7 +56,6 @@ void setup() {
   radio.startListening();  //начинаем слушать эфир, мы приёмный модуль
 }
 void loop() {
-	volt.update(); //DELETE
 	gyro.update();
 
 	motorFR.writeMicroseconds(power[0]);
@@ -64,23 +63,22 @@ void loop() {
 	motorRR.writeMicroseconds(power[2]);
 	motorRL.writeMicroseconds(power[3]);
 	
-	//while (radio.available(&pipeNo)) {
+	if (radio.available(&pipeNo)) {
 		radio.read(&data_upr, sizeof(data_upr));
 		gotByte = volt.update() * 10;
 		radio.writeAckPayload(pipeNo, &gotByte, 1);  // отправляем обратно то что приняли
 #ifdef DEBUG
+		delay(100);
 		Serial.print("DATA: ");
 		Serial.println(data_upr[1]);
 		Serial.println("power[1]: ");		
 		Serial.println(power[1]);
 #endif // DEBUG
-		delay(10);
+		//delay(10);
 
 		calculate(power, data_upr);
-	//}
-  //change(power, data_upr);
+	}
 
   led.update();
 }
 // TODO: while (true) instead of loop
-// TODO: IN PULT CHANGE LED 13

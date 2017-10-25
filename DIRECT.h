@@ -4,12 +4,11 @@
 #include "GYROSCOPE.h"
 
 #define DEBUG
-#define TEST
 
 #define MIN_POWER 800
 #define MAX_POWER 2300
 #define POWER_TO_START 880
-#define POWER_TO_UP 1000
+#define POWER_TO_UP 1200
 #define POWER_TANG_KREN 500
 #define POWER_YAW 500
 #define POWER_FOR_PERIOD 5
@@ -18,23 +17,27 @@
 uint16_t standart[4] = { MIN_POWER, MIN_POWER, MIN_POWER, MIN_POWER };
 unsigned long currr = 0;
 unsigned long prevvv = 0;
+unsigned long _currr = 0;
+unsigned long _prevvv = 0;
 uint8_t add = 0;
 
-uint16_t height(uint8_t value, uint8_t flag) {
+void height_up(uint8_t value) {
+	currr = millis();
 	if (currr - prevvv >= PERIOD)
 	{
-		//begin action
-		for (uint8_t i = 0; i < 4; i++) {
-			if (flag == 0)
-				standart[i] += value;
-			else if(flag == 1)
-				standart[i] -= value;
-		}
-		//end action
+		for (uint8_t i = 0; i < 4; i++)
+			standart[i] += value;
 		prevvv = currr; //remember time
-		return 1;
 	}
-	else return 0;
+}
+void height_down(uint8_t value) {
+	_currr = millis();
+	if (_currr - _prevvv >= PERIOD)
+	{
+		for (uint8_t i = 0; i < 4; i++)
+			standart[i] -= value;
+		_prevvv = _currr; //remember time
+	}
 }
 void gyro_stab(uint16_t(&power)[4]) {
 
@@ -66,13 +69,20 @@ void axis_y_l(uint16_t(&power)[4], uint8_t(&data_upr)[6]) {
 #endif // DEBUG
 		if (data_upr[1] > 127) {
 			add = map(data_upr[1], 127, 255, 0, POWER_FOR_PERIOD);
-			height(add, 0);
+			height_up(add);
 		}
 		else if (data_upr[1] < 127) {
-			add = map(data_upr[1], 127, 0, 0, POWER_FOR_PERIOD);
-			height(add, 1);
+			add = map(data_upr[1], 127, 0, 0, POWER_FOR_PERIOD*10);
+			height_down(add);
 		}
 #ifdef DEBUG
+	}
+	else
+	{
+		if (data_upr[1] < 127) {
+			add = map(data_upr[1], 127, 0, 0, POWER_FOR_PERIOD*10);
+			height_down(add);
+		}
 	}
 #endif // DEBUG
 }
